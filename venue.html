@@ -57,6 +57,29 @@
     </header>
     <main>
         <form action="/submit-booking" method="POST">
+            <label for="state">Select State:</label>
+            <select id="state" name="state" required>
+                <option value="">Select a state</option>
+                <option value="state1">State 1</option>
+                <option value="state2">State 2</option>
+                <option value="state3">State 3</option>
+            </select>
+
+            <label for="district">Select District:</label>
+            <select id="district" name="district" required>
+                <option value="">Select a district</option>
+            </select>
+
+            <label for="city">Select City:</label>
+            <select id="city" name="city" required>
+                <option value="">Select a city</option>
+            </select>
+
+            <label for="venue">Select Venue:</label>
+            <select id="venue" name="venue" required>
+                <option value="">Select a venue</option>
+            </select>
+
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
 
@@ -87,5 +110,70 @@
             <button type="submit">Submit Booking</button>
         </form>
     </main>
+
+    <script>
+        const stateDistrictCityData = {
+            state1: {
+                districts: {
+                    district1: ["City 1-1", "City 1-2"],
+                    district2: ["City 2-1", "City 2-2"],
+                },
+            },
+            state2: {
+                districts: {
+                    district3: ["City 3-1", "City 3-2"],
+                    district4: ["City 4-1", "City 4-2"],
+                },
+            },
+            state3: {
+                districts: {
+                    district5: ["City 5-1", "City 5-2"],
+                    district6: ["City 6-1", "City 6-2"],
+                },
+            },
+        };
+
+        const stateSelect = document.getElementById("state");
+        const districtSelect = document.getElementById("district");
+        const citySelect = document.getElementById("city");
+
+        stateSelect.addEventListener("change", () => {
+            const selectedState = stateSelect.value;
+            districtSelect.innerHTML = '<option value="">Select a district</option>';
+            citySelect.innerHTML = '<option value="">Select a city</option>';
+
+            if (selectedState && stateDistrictCityData[selectedState]) {
+                const districts = stateDistrictCityData[selectedState].districts;
+                for (const district in districts) {
+                    const option = document.createElement("option");
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                }
+            }
+        });
+
+        districtSelect.addEventListener("change", () => {
+            const selectedState = stateSelect.value;
+            const selectedDistrict = districtSelect.value;
+            citySelect.innerHTML = '<option value="">Select a city</option>';
+
+            if (
+                selectedState &&
+                selectedDistrict &&
+                stateDistrictCityData[selectedState] &&
+                stateDistrictCityData[selectedState].districts[selectedDistrict]
+            ) {
+                const cities =
+                    stateDistrictCityData[selectedState].districts[selectedDistrict];
+                cities.forEach((city) => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
