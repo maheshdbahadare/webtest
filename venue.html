@@ -9,6 +9,13 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background: url('resource/back.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f9;
         }
         header {
@@ -47,7 +54,7 @@
             cursor: pointer;
         }
         form button:hover {
-            background-color: #45a049;
+            background-color: #3e8e41;
         }
     </style>
 </head>
@@ -112,23 +119,53 @@
     </main>
 
     <script>
-        const stateDistrictCityData = {
+        const stateDistrictCityVenueData = {
             state1: {
                 districts: {
-                    district1: ["City 1-1", "City 1-2"],
-                    district2: ["City 2-1", "City 2-2"],
+                    district1: {
+                        cities: {
+                            "City 1-1": ["Venue 1-1-1", "Venue 1-1-2"],
+                            "City 1-2": ["Venue 1-2-1", "Venue 1-2-2"],
+                        },
+                    },
+                    district2: {
+                        cities: {
+                            "City 2-1": ["Venue 2-1-1", "Venue 2-1-2"],
+                            "City 2-2": ["Venue 2-2-1", "Venue 2-2-2"],
+                        },
+                    },
                 },
             },
             state2: {
                 districts: {
-                    district3: ["City 3-1", "City 3-2"],
-                    district4: ["City 4-1", "City 4-2"],
+                    district3: {
+                        cities: {
+                            "City 3-1": ["Venue 3-1-1", "Venue 3-1-2"],
+                            "City 3-2": ["Venue 3-2-1", "Venue 3-2-2"],
+                        },
+                    },
+                    district4: {
+                        cities: {
+                            "City 4-1": ["Venue 4-1-1", "Venue 4-1-2"],
+                            "City 4-2": ["Venue 4-2-1", "Venue 4-2-2"],
+                        },
+                    },
                 },
             },
             state3: {
                 districts: {
-                    district5: ["City 5-1", "City 5-2"],
-                    district6: ["City 6-1", "City 6-2"],
+                    district5: {
+                        cities: {
+                            "City 5-1": ["Venue 5-1-1", "Venue 5-1-2"],
+                            "City 5-2": ["Venue 5-2-1", "Venue 5-2-2"],
+                        },
+                    },
+                    district6: {
+                        cities: {
+                            "City 6-1": ["Venue 6-1-1", "Venue 6-1-2"],
+                            "City 6-2": ["Venue 6-2-1", "Venue 6-2-2"],
+                        },
+                    },
                 },
             },
         };
@@ -136,14 +173,16 @@
         const stateSelect = document.getElementById("state");
         const districtSelect = document.getElementById("district");
         const citySelect = document.getElementById("city");
+        const venueSelect = document.getElementById("venue");
 
         stateSelect.addEventListener("change", () => {
             const selectedState = stateSelect.value;
             districtSelect.innerHTML = '<option value="">Select a district</option>';
             citySelect.innerHTML = '<option value="">Select a city</option>';
+            venueSelect.innerHTML = '<option value="">Select a venue</option>';
 
-            if (selectedState && stateDistrictCityData[selectedState]) {
-                const districts = stateDistrictCityData[selectedState].districts;
+            if (selectedState && stateDistrictCityVenueData[selectedState]) {
+                const districts = stateDistrictCityVenueData[selectedState].districts;
                 for (const district in districts) {
                     const option = document.createElement("option");
                     option.value = district;
@@ -157,20 +196,49 @@
             const selectedState = stateSelect.value;
             const selectedDistrict = districtSelect.value;
             citySelect.innerHTML = '<option value="">Select a city</option>';
+            venueSelect.innerHTML = '<option value="">Select a venue</option>';
 
             if (
                 selectedState &&
                 selectedDistrict &&
-                stateDistrictCityData[selectedState] &&
-                stateDistrictCityData[selectedState].districts[selectedDistrict]
+                stateDistrictCityVenueData[selectedState] &&
+                stateDistrictCityVenueData[selectedState].districts[selectedDistrict]
             ) {
                 const cities =
-                    stateDistrictCityData[selectedState].districts[selectedDistrict];
-                cities.forEach((city) => {
+                    stateDistrictCityVenueData[selectedState].districts[selectedDistrict]
+                        .cities;
+                for (const city in cities) {
                     const option = document.createElement("option");
                     option.value = city;
                     option.textContent = city;
                     citySelect.appendChild(option);
+                }
+            }
+        });
+
+        citySelect.addEventListener("change", () => {
+            const selectedState = stateSelect.value;
+            const selectedDistrict = districtSelect.value;
+            const selectedCity = citySelect.value;
+            venueSelect.innerHTML = '<option value="">Select a venue</option>';
+
+            if (
+                selectedState &&
+                selectedDistrict &&
+                selectedCity &&
+                stateDistrictCityVenueData[selectedState] &&
+                stateDistrictCityVenueData[selectedState].districts[selectedDistrict] &&
+                stateDistrictCityVenueData[selectedState].districts[selectedDistrict]
+                    .cities[selectedCity]
+            ) {
+                const venues =
+                    stateDistrictCityVenueData[selectedState].districts[selectedDistrict]
+                        .cities[selectedCity];
+                venues.forEach((venue) => {
+                    const option = document.createElement("option");
+                    option.value = venue;
+                    option.textContent = venue;
+                    venueSelect.appendChild(option);
                 });
             }
         });
